@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import SearchBox from './SearchBox.jsx';
+import BrandMark from './BrandMark.jsx';
 import { useTheme } from '../hooks/useTheme.js';
 import { TOOLS } from '../core/engine.js';
 
@@ -20,7 +21,8 @@ export default function Header() {
     <header className="site-header">
       <div className="container bar">
         <Link className="brand" to="/">
-          <span className="mark">TW</span>Toolworks
+          <BrandMark size={26} />
+          Toolworks
         </Link>
         <nav className="main-nav" aria-label="Primary">
           {NAV_LINKS.map(([href, label]) => (

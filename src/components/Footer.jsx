@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import BrandMark from './BrandMark.jsx';
 import { CATEGORIES } from '../core/engine.js';
 
 export default function Footer() {
@@ -30,7 +31,8 @@ export default function Footer() {
       <div className="container footer-grid">
         <div>
           <Link className="brand" to="/" style={{ marginBottom: 10, display: 'inline-flex' }}>
-            <span className="mark">TW</span>Toolworks
+            <BrandMark size={26} />
+            Toolworks
           </Link>
           <p style={{ color: 'var(--muted)', fontSize: 13.5, maxWidth: 280, marginTop: 10 }}>
             146 genuinely working tools today, built on an architecture designed to scale to 500+
