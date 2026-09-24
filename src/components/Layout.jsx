@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header.jsx';
 import Footer from './Footer.jsx';
@@ -21,7 +21,9 @@ export default function Layout() {
     <>
       <Header />
       <main ref={mainRef}>
-        <Outlet />
+        <Suspense fallback={<div className="route-loading" />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
       <div id="toast" className="toast" role="status" aria-live="polite"></div>

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { TOOLS, CATEGORIES, isLive, svgIcon } from '../core/engine.js';
+import { TOOLS, CATEGORIES, isLive, svgIcon } from '../core/engine-core.js';
 import ToolCard from '../components/ToolCard.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 

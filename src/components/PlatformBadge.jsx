@@ -1,4 +1,4 @@
-import { PLATFORM_META } from '../core/engine.js';
+import { PLATFORM_META } from '../core/engine-core.js';
 
 // React port of the original platformBadge(): a colored letter/glyph chip
 // representing a keyword-research platform (Google, YouTube, Bing, ...).

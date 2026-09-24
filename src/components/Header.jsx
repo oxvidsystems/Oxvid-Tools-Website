@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import SearchBox from './SearchBox.jsx';
 import BrandMark from './BrandMark.jsx';
 import { useTheme } from '../hooks/useTheme.js';
-import { TOOLS } from '../core/engine.js';
+import { TOOLS } from '../core/engine-core.js';
 
 const NAV_LINKS = [
   ['/', 'Home'],

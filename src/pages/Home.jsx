@@ -9,7 +9,7 @@ import {
   KW_COUNTRIES,
   KW_LANGS,
   svgIcon,
-} from '../core/engine.js';
+} from '../core/engine-core.js';
 import SearchBox from '../components/SearchBox.jsx';
 import PlatformBadge from '../components/PlatformBadge.jsx';
 import Section from '../components/Section.jsx';

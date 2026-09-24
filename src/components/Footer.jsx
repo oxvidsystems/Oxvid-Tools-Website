@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import BrandMark from './BrandMark.jsx';
-import { CATEGORIES } from '../core/engine.js';
+import { CATEGORIES } from '../core/engine-core.js';
 
 export default function Footer() {
   const cols = [

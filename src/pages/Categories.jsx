@@ -1,4 +1,4 @@
-import { CATEGORIES } from '../core/engine.js';
+import { CATEGORIES } from '../core/engine-core.js';
 import CategoryCard from '../components/CategoryCard.jsx';
 import { useSEO } from '../hooks/useSEO.js';
 

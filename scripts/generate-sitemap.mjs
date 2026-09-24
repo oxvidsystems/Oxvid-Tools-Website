@@ -1,12 +1,12 @@
 // Generates public/sitemap.xml from the tool/category data in
-// src/core/engine.js at build time, so it never drifts out of sync with the
-// actual tool registry. Runs before `vite build` (see package.json).
+// src/core/engine-core.js at build time, so it never drifts out of sync
+// with the actual tool registry. Runs before `vite build` (see package.json).
 //
-// engine.js is a plain browser module (canvas, document, etc. at call time),
-// so instead of importing it under Node we pull out just the two static
-// data literals — RAW_TOOLS and CATEGORIES — as text and evaluate those in
-// isolation. Both are fixed array/object literals we author ourselves, not
-// user input, so this is safe.
+// engine-core.js is a plain browser module (canvas, document, etc. at call
+// time), so instead of importing it under Node we pull out just the two
+// static data literals — RAW_TOOLS and CATEGORIES — as text and evaluate
+// those in isolation. Both are fixed array/object literals we author
+// ourselves, not user input, so this is safe.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
@@ -14,7 +14,7 @@ import path from 'node:path';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SITE_URL = 'https://oxvid-tools-website.vercel.app';
 
-const engineSrc = readFileSync(path.join(__dirname, '../src/core/engine.js'), 'utf8');
+const engineSrc = readFileSync(path.join(__dirname, '../src/core/engine-core.js'), 'utf8');
 
 function extractArrayLiteral(varName) {
   const start = engineSrc.indexOf(`const ${varName} = [`);

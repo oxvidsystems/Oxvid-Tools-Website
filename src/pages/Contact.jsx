@@ -1,4 +1,4 @@
-import { toast } from '../core/engine.js';
+import { toast } from '../core/engine-core.js';
 import { useSEO } from '../hooks/useSEO.js';
 
 export default function Contact() {

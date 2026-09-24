@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { TOOLS, CAT_BY_KEY, esc } from '../core/engine.js';
+import { TOOLS, CAT_BY_KEY, esc } from '../core/engine-core.js';
 
 // React port of the original wireSearch(): live filtering against the tool
 // registry, a dropdown of up to 8 matches, and Enter navigating to the full

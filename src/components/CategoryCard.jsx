@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { toolsInCategory, svgIcon } from '../core/engine.js';
+import { toolsInCategory, svgIcon } from '../core/engine-core.js';
 
 export default function CategoryCard({ category }) {
   const count = toolsInCategory(category.key).length;

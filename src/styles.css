@@ -420,3 +420,4 @@ table.simple th,table.simple td{text-align:left;padding:8px 10px;border-bottom:1
 table.simple th{color:var(--muted);font-weight:600;font-size:12px;}
 .range-out{font-family:var(--font-mono);font-weight:600;}
 .static-copy p{margin-bottom:14px;}
+.route-loading{min-height:50vh;}

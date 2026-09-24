@@ -7,7 +7,7 @@ import {
   genFeatures,
   genFaq,
   relatedTools,
-} from '../core/engine.js';
+} from '../core/engine-core.js';
 import ToolWorkspace from '../components/ToolWorkspace.jsx';
 import ToolCard from '../components/ToolCard.jsx';
 import NotFound from './NotFound.jsx';
