@@ -1,16 +1,19 @@
-import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CAT_BY_KEY, toolsInCategory, isLive, svgIcon } from '../core/engine.js';
 import ToolCard from '../components/ToolCard.jsx';
 import NotFound from './NotFound.jsx';
+import { useSEO } from '../hooks/useSEO.js';
 
 export default function Category() {
   const { key } = useParams();
   const cat = CAT_BY_KEY[key];
 
-  useEffect(() => {
-    if (cat) document.title = `${cat.name} — Oxvid Tools`;
-  }, [cat]);
+  useSEO({
+    title: cat ? cat.name : 'Category not found',
+    description: cat ? `${cat.desc} Browse the full ${cat.name} toolset on Oxvid Tools.` : undefined,
+    path: `/category/${key}`,
+    noindex: !cat,
+  });
 
   if (!cat) return <NotFound />;
 

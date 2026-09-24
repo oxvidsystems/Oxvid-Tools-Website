@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
+import { useSEO } from '../hooks/useSEO.js';
 
 // React port of the original PageStatic(): a simple prose page rendered
 // from a trusted, hard-coded HTML string owned by this codebase (About,
 // Privacy, Terms) — never from user or external input.
-export default function StaticPage({ title, htmlCopy }) {
-  useEffect(() => {
-    document.title = `${title} — Oxvid Tools`;
-  }, [title]);
+export default function StaticPage({ title, htmlCopy, description, path }) {
+  useSEO({ title, description, path });
 
   return (
     <div className="container section" style={{ maxWidth: 720 }}>

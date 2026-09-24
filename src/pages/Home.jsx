@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   TOOLS,
@@ -15,6 +15,7 @@ import PlatformBadge from '../components/PlatformBadge.jsx';
 import Section from '../components/Section.jsx';
 import { SectionHead } from '../components/Section.jsx';
 import CategoryCard from '../components/CategoryCard.jsx';
+import { useSEO, SITE_URL } from '../hooks/useSEO.js';
 
 const SHORTCUT_SLUGS = [
   'word-counter',
@@ -67,9 +68,23 @@ export default function Home() {
   const [kwCountry, setKwCountry] = useState('global');
   const [kwLang, setKwLang] = useState('en');
 
-  useEffect(() => {
-    document.title = 'Oxvid Tools — Fast, trustworthy utilities';
-  }, []);
+  useSEO({
+    title: 'Oxvid Tools — Fast, trustworthy utilities',
+    description:
+      '146 genuinely functional tools for documents, images, text, code, numbers and design. No sign-up, no clutter, just tools that work.',
+    path: '/',
+    jsonLd: {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Oxvid Tools',
+      url: SITE_URL,
+      potentialAction: {
+        '@type': 'SearchAction',
+        target: `${SITE_URL}/tools?q={search_term_string}`,
+        'query-input': 'required name=search_term_string',
+      },
+    },
+  });
 
   function goToKwTool() {
     const q = encodeURIComponent(kwQuery.trim() || 'coffee subscription');

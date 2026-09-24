@@ -1,11 +1,14 @@
-import { useEffect } from 'react';
 import { CATEGORIES } from '../core/engine.js';
 import CategoryCard from '../components/CategoryCard.jsx';
+import { useSEO } from '../hooks/useSEO.js';
 
 export default function Categories() {
-  useEffect(() => {
-    document.title = 'Categories — Oxvid Tools';
-  }, []);
+  useSEO({
+    title: 'Categories',
+    description:
+      'Browse all 146 Oxvid Tools by category: PDF & Documents, Image Tools, Text & Writing, Developer Tools, Calculators, SEO & Web, Finance & Business, Generators and Color & Design.',
+    path: '/categories',
+  });
 
   return (
     <>

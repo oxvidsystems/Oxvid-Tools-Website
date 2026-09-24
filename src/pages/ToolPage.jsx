@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   TOOL_BY_SLUG,
@@ -12,19 +11,47 @@ import {
 import ToolWorkspace from '../components/ToolWorkspace.jsx';
 import ToolCard from '../components/ToolCard.jsx';
 import NotFound from './NotFound.jsx';
+import { useSEO, SITE_URL } from '../hooks/useSEO.js';
 
 export default function ToolPage() {
   const { slug } = useParams();
   const tool = TOOL_BY_SLUG[slug];
+  const cat = tool ? CAT_BY_KEY[tool.category] : null;
+  const live = tool ? isLive(tool) : false;
+  const faq = tool ? genFaq(tool) : [];
 
-  useEffect(() => {
-    if (tool) document.title = `${tool.name} — Oxvid Tools`;
-  }, [tool]);
+  useSEO({
+    title: tool ? tool.name : 'Tool not found',
+    description: tool ? tool.description : undefined,
+    path: tool ? `/tool/${tool.slug}` : `/tool/${slug}`,
+    noindex: !tool,
+    jsonLd: tool
+      ? {
+          '@context': 'https://schema.org',
+          '@graph': [
+            {
+              '@type': 'SoftwareApplication',
+              name: tool.name,
+              description: tool.description,
+              url: `${SITE_URL}/tool/${tool.slug}`,
+              applicationCategory: 'UtilitiesApplication',
+              operatingSystem: 'Any (runs in the browser)',
+              offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
+            },
+            {
+              '@type': 'FAQPage',
+              mainEntity: faq.map(([q, a]) => ({
+                '@type': 'Question',
+                name: q,
+                acceptedAnswer: { '@type': 'Answer', text: a },
+              })),
+            },
+          ],
+        }
+      : undefined,
+  });
 
   if (!tool) return <NotFound />;
-
-  const cat = CAT_BY_KEY[tool.category];
-  const live = isLive(tool);
 
   return (
     <>
@@ -59,7 +86,7 @@ export default function ToolPage() {
             ))}
           </ol>
           <h2 style={{ marginTop: 30 }}>Frequently asked questions</h2>
-          {genFaq(tool).map(([q, a], i) => (
+          {faq.map(([q, a], i) => (
             <details className="faq-item" key={i}>
               <summary>{q}</summary>
               <p>{a}</p>

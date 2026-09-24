@@ -1,10 +1,12 @@
-import { useEffect } from 'react';
 import { toast } from '../core/engine.js';
+import { useSEO } from '../hooks/useSEO.js';
 
 export default function Contact() {
-  useEffect(() => {
-    document.title = 'Contact — Oxvid Tools';
-  }, []);
+  useSEO({
+    title: 'Contact',
+    description: 'Get in touch with Oxvid Tools — report a bug or suggest a tool for the roadmap.',
+    path: '/contact',
+  });
 
   function handleSubmit(e) {
     e.preventDefault();

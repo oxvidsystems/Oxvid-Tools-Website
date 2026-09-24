@@ -1,10 +1,13 @@
-import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useSEO } from '../hooks/useSEO.js';
 
 export default function NotFound() {
-  useEffect(() => {
-    document.title = 'Page not found — Oxvid Tools';
-  }, []);
+  useSEO({
+    title: 'Page not found',
+    description: "The page you're looking for doesn't exist on Oxvid Tools.",
+    path: typeof window !== 'undefined' ? window.location.pathname : '/404',
+    noindex: true,
+  });
 
   return (
     <div className="container section" style={{ textAlign: 'center' }}>

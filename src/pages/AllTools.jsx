@@ -1,7 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { TOOLS, CATEGORIES, isLive, svgIcon } from '../core/engine.js';
 import ToolCard from '../components/ToolCard.jsx';
+import { useSEO } from '../hooks/useSEO.js';
 
 export default function AllTools() {
   const [searchParams] = useSearchParams();
@@ -14,9 +15,13 @@ export default function AllTools() {
     return 'all';
   });
 
-  useEffect(() => {
-    document.title = 'All Tools — Oxvid Tools';
-  }, []);
+  // Canonicalizes to the base /tools URL regardless of filter/search query
+  // params, so the many filter combinations don't dilute as duplicate pages.
+  useSEO({
+    title: 'All Tools',
+    description: `Browse the complete registry of ${TOOLS.length} tools across ${CATEGORIES.length} categories — PDF, image, text, developer, calculator, SEO, finance, generator and color tools.`,
+    path: '/tools',
+  });
 
   const list = useMemo(() => {
     let l = TOOLS.slice();
