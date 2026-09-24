@@ -107,7 +107,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .main-nav a:hover{color:var(--ink);background:var(--line);}
 .main-nav a.active{color:var(--ink);}
 .header-search{flex:1;max-width:320px;position:relative;}
-.header-search input{width:100%;padding:8px 12px 8px 34px;border:1px solid var(--line);background:var(--panel);border-radius:7px;font-size:13.5px;}
+.header-search input[type="search"]{width:100%;padding:8px 12px 8px 34px;border:1px solid var(--line);background:var(--panel);border-radius:7px;font-size:13.5px;}
 .header-search input::placeholder{color:var(--muted-2);}
 .header-search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--muted-2);pointer-events:none;}
 .header-theme{border:1px solid var(--line);background:var(--panel);width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:none;}
