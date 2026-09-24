@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { CAT_BY_KEY, toolsInCategory, isLive, svgIcon } from '../core/engine.js';
 import ToolCard from '../components/ToolCard.jsx';
 import NotFound from './NotFound.jsx';
-import { useSEO } from '../hooks/useSEO.js';
+import { useSEO, SITE_URL } from '../hooks/useSEO.js';
 
 export default function Category() {
   const { key } = useParams();
@@ -13,6 +13,17 @@ export default function Category() {
     description: cat ? `${cat.desc} Browse the full ${cat.name} toolset on Oxvid Tools.` : undefined,
     path: `/category/${key}`,
     noindex: !cat,
+    jsonLd: cat
+      ? {
+          '@context': 'https://schema.org',
+          '@type': 'BreadcrumbList',
+          itemListElement: [
+            { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+            { '@type': 'ListItem', position: 2, name: 'Categories', item: `${SITE_URL}/categories` },
+            { '@type': 'ListItem', position: 3, name: cat.name, item: `${SITE_URL}/category/${cat.key}` },
+          ],
+        }
+      : undefined,
   });
 
   if (!cat) return <NotFound />;

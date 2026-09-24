@@ -46,6 +46,24 @@ export default function ToolPage() {
                 acceptedAnswer: { '@type': 'Answer', text: a },
               })),
             },
+            {
+              '@type': 'BreadcrumbList',
+              itemListElement: [
+                { '@type': 'ListItem', position: 1, name: 'Home', item: SITE_URL },
+                {
+                  '@type': 'ListItem',
+                  position: 2,
+                  name: cat.name,
+                  item: `${SITE_URL}/category/${cat.key}`,
+                },
+                {
+                  '@type': 'ListItem',
+                  position: 3,
+                  name: tool.name,
+                  item: `${SITE_URL}/tool/${tool.slug}`,
+                },
+              ],
+            },
           ],
         }
       : undefined,
