@@ -18,7 +18,7 @@ export default function ToolPage() {
   const tool = TOOL_BY_SLUG[slug];
 
   useEffect(() => {
-    if (tool) document.title = `${tool.name} — Toolworks`;
+    if (tool) document.title = `${tool.name} — Oxvid Tools`;
   }, [tool]);
 
   if (!tool) return <NotFound />;

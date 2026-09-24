@@ -1,4 +1,4 @@
-/* Toolworks engine — 145 client-side tool implementations, extracted
+/* Oxvid Tools engine — 145 client-side tool implementations, extracted
    verbatim from the original single-file site. Framework-agnostic:
    these functions take a plain DOM container element and mount
    themselves imperatively (canvas ops, PDF processing via pdf-lib/
@@ -3359,7 +3359,7 @@ const DISPATCH = {
    ------------------------------------------------------------------- */
 (function integrityCheck(){
   const missing = TOOLS.filter(t=>!SOON.has(t.id) && !DISPATCH[t.id]);
-  if(missing.length) console.warn('Toolworks: missing implementation for', missing.map(t=>t.id));
+  if(missing.length) console.warn('Oxvid Tools: missing implementation for', missing.map(t=>t.id));
 })();
 
 export {

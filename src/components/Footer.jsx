@@ -32,7 +32,7 @@ export default function Footer() {
         <div>
           <Link className="brand" to="/" style={{ marginBottom: 10, display: 'inline-flex' }}>
             <BrandMark size={26} />
-            Toolworks
+            Oxvid Tools
           </Link>
           <p style={{ color: 'var(--muted)', fontSize: 13.5, maxWidth: 280, marginTop: 10 }}>
             146 genuinely working tools today, built on an architecture designed to scale to 500+
@@ -51,7 +51,7 @@ export default function Footer() {
         ))}
       </div>
       <div className="container footer-bottom">
-        <span>© {new Date().getFullYear()} Toolworks. All tools run in your browser unless noted.</span>
+        <span>© {new Date().getFullYear()} Oxvid Tools. All tools run in your browser unless noted.</span>
         <span>Built for speed, privacy and clarity.</span>
       </div>
     </footer>

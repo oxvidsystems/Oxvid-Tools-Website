@@ -68,7 +68,7 @@ export default function Home() {
   const [kwLang, setKwLang] = useState('en');
 
   useEffect(() => {
-    document.title = 'Toolworks — Fast, trustworthy utilities';
+    document.title = 'Oxvid Tools — Fast, trustworthy utilities';
   }, []);
 
   function goToKwTool() {

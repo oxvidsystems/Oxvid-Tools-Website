@@ -9,7 +9,7 @@ export default function Category() {
   const cat = CAT_BY_KEY[key];
 
   useEffect(() => {
-    if (cat) document.title = `${cat.name} — Toolworks`;
+    if (cat) document.title = `${cat.name} — Oxvid Tools`;
   }, [cat]);
 
   if (!cat) return <NotFound />;

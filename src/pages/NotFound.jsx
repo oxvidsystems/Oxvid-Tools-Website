@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function NotFound() {
   useEffect(() => {
-    document.title = 'Page not found — Toolworks';
+    document.title = 'Page not found — Oxvid Tools';
   }, []);
 
   return (

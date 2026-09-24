@@ -3,7 +3,7 @@ import { toast } from '../core/engine.js';
 
 export default function Contact() {
   useEffect(() => {
-    document.title = 'Contact — Toolworks';
+    document.title = 'Contact — Oxvid Tools';
   }, []);
 
   function handleSubmit(e) {

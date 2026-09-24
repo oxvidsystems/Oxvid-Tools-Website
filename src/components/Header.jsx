@@ -22,7 +22,7 @@ export default function Header() {
       <div className="container bar">
         <Link className="brand" to="/">
           <BrandMark size={26} />
-          Toolworks
+          Oxvid Tools
         </Link>
         <nav className="main-nav" aria-label="Primary">
           {NAV_LINKS.map(([href, label]) => (

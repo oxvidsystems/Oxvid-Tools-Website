@@ -15,7 +15,7 @@ export default function AllTools() {
   });
 
   useEffect(() => {
-    document.title = 'All Tools — Toolworks';
+    document.title = 'All Tools — Oxvid Tools';
   }, []);
 
   const list = useMemo(() => {

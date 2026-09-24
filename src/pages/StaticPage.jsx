@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 // Privacy, Terms) — never from user or external input.
 export default function StaticPage({ title, htmlCopy }) {
   useEffect(() => {
-    document.title = `${title} — Toolworks`;
+    document.title = `${title} — Oxvid Tools`;
   }, [title]);
 
   return (

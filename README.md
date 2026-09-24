@@ -1,8 +1,9 @@
-# Toolworks — Oxvid Tools Website
+# Oxvid Tools
 
-A React + Vite conversion of the original single-file Toolworks HTML site: 146
-client-side utilities (PDF, image, text, developer, calculator, SEO, finance,
-generator and color/design tools) across a proper multi-page app.
+A React + Vite conversion of the original single-file "Toolworks" HTML site,
+rebranded as Oxvid Tools: 146 client-side utilities (PDF, image, text,
+developer, calculator, SEO, finance, generator and color/design tools) across
+a proper multi-page app.
 
 ## Stack
 
