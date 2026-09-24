@@ -12,6 +12,7 @@ import ToolWorkspace from '../components/ToolWorkspace.jsx';
 import ToolCard from '../components/ToolCard.jsx';
 import NotFound from './NotFound.jsx';
 import { useSEO, SITE_URL } from '../hooks/useSEO.js';
+import { BLOG_INDEX_BY_TOOL_SLUG } from '../data/blogIndex.js';
 
 export default function ToolPage() {
   const { slug } = useParams();
@@ -19,6 +20,7 @@ export default function ToolPage() {
   const cat = tool ? CAT_BY_KEY[tool.category] : null;
   const live = tool ? isLive(tool) : false;
   const faq = tool ? genFaq(tool) : [];
+  const relatedPost = tool ? BLOG_INDEX_BY_TOOL_SLUG[tool.slug] : null;
 
   useSEO({
     title: tool ? tool.name : 'Tool not found',
@@ -94,6 +96,25 @@ export default function ToolPage() {
       <div className="container">
         <ToolWorkspace key={tool.slug} tool={tool} />
       </div>
+
+      {relatedPost && (
+        <div className="container">
+          <Link
+            className="card"
+            to={`/blog/${relatedPost.slug}`}
+            style={{
+              display: 'block',
+              padding: '14px 18px',
+              margin: '18px 0',
+              textDecoration: 'none',
+              color: 'var(--ink)',
+              fontSize: 13.5,
+            }}
+          >
+            Read the guide: <b>{relatedPost.title}</b> →
+          </Link>
+        </div>
+      )}
 
       <div className="container tool-info">
         <div>

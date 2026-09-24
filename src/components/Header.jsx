@@ -9,8 +9,8 @@ const NAV_LINKS = [
   ['/', 'Home'],
   ['/tools', 'All Tools'],
   ['/categories', 'Categories'],
+  ['/blog', 'Blog'],
   ['/tools?f=popular', 'Popular'],
-  ['/tools?f=new', 'New Tools'],
 ];
 
 export default function Header() {

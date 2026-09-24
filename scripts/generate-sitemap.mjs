@@ -10,6 +10,7 @@
 import { readFileSync, writeFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
+import { BLOG_POSTS } from '../src/data/blogPosts.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SITE_URL = 'https://oxvid-tools-website.vercel.app';
@@ -38,6 +39,7 @@ const staticRoutes = [
   { loc: '/tools', changefreq: 'weekly', priority: '0.9' },
   { loc: '/categories', changefreq: 'monthly', priority: '0.7' },
   { loc: '/about', changefreq: 'monthly', priority: '0.4' },
+  { loc: '/blog', changefreq: 'weekly', priority: '0.6' },
   { loc: '/contact', changefreq: 'yearly', priority: '0.3' },
   { loc: '/privacy', changefreq: 'yearly', priority: '0.2' },
   { loc: '/terms', changefreq: 'yearly', priority: '0.2' },
@@ -55,7 +57,13 @@ const toolRoutes = tools.map((t) => ({
   priority: '0.8',
 }));
 
-const allRoutes = [...staticRoutes, ...categoryRoutes, ...toolRoutes];
+const blogRoutes = BLOG_POSTS.map((p) => ({
+  loc: `/blog/${p.slug}`,
+  changefreq: 'yearly',
+  priority: '0.6',
+}));
+
+const allRoutes = [...staticRoutes, ...categoryRoutes, ...toolRoutes, ...blogRoutes];
 
 const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

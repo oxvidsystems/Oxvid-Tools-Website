@@ -25,6 +25,12 @@
     <priority>0.4</priority>
   </url>
   <url>
+    <loc>https://oxvid-tools-website.vercel.app/blog</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://oxvid-tools-website.vercel.app/contact</loc>
     <lastmod>2026-09-24</lastmod>
     <changefreq>yearly</changefreq>
@@ -971,5 +977,35 @@
     <lastmod>2026-09-24</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://oxvid-tools-website.vercel.app/blog/reduce-pdf-file-size-without-losing-quality</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://oxvid-tools-website.vercel.app/blog/json-formatter-guide-why-when-you-need-one</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://oxvid-tools-website.vercel.app/blog/qr-codes-explained-types-uses-how-to-create</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://oxvid-tools-website.vercel.app/blog/how-to-calculate-bmi-and-what-it-really-means</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://oxvid-tools-website.vercel.app/blog/password-security-what-actually-makes-a-password-strong</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

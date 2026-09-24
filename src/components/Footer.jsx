@@ -9,6 +9,7 @@ export default function Footer() {
       [
         ['/tools', 'All Tools'],
         ['/categories', 'Categories'],
+        ['/blog', 'Blog'],
         ['/tools?f=popular', 'Popular Tools'],
         ['/tools?f=new', 'New Tools'],
       ],

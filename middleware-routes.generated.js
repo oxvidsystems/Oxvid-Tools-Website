@@ -6,6 +6,7 @@ export const VALID_ROUTES = [
   "/tools",
   "/categories",
   "/about",
+  "/blog",
   "/contact",
   "/privacy",
   "/terms",
@@ -163,5 +164,10 @@ export const VALID_ROUTES = [
   "/tool/palette-extractor",
   "/tool/gradient-generator",
   "/tool/css-box-shadow-generator",
-  "/tool/css-border-radius-generator"
+  "/tool/css-border-radius-generator",
+  "/blog/reduce-pdf-file-size-without-losing-quality",
+  "/blog/json-formatter-guide-why-when-you-need-one",
+  "/blog/qr-codes-explained-types-uses-how-to-create",
+  "/blog/how-to-calculate-bmi-and-what-it-really-means",
+  "/blog/password-security-what-actually-makes-a-password-strong"
 ];
