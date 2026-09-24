@@ -13,76 +13,157 @@ import {
   fmtBytes,
   h,
   imageDropzone,
+  imageMultiDropzone,
+  loadCdnScript,
   loadImageFile,
   numField,
   selectField,
   toast,
 } from './engine-core.js';
 
-function previewCanvas(container){
-  const box = h('div',{style:'margin-top:16px;border:1px solid var(--line);border-radius:8px;background:repeating-conic-gradient(var(--paper) 0% 25%, var(--panel) 0% 50%) 0 0/16px 16px;display:flex;align-items:center;justify-content:center;padding:12px;min-height:140px;overflow:auto;'});
-  const canvas = h('canvas',{style:'max-width:100%;max-height:420px;display:block;'});
-  box.appendChild(canvas);
-  container.appendChild(box);
-  return canvas;
-}
-
 function suggestExt(mime){ return {'image/jpeg':'jpg','image/png':'png','image/webp':'webp'}[mime] || 'png'; }
 
+function baseName(filename){
+  const idx = filename.lastIndexOf('.');
+  return idx > 0 ? filename.slice(0, idx) : filename;
+}
+
+async function loadJsZip(){
+  if(typeof window.JSZip === 'undefined'){
+    await loadCdnScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
+  }
+  return window.JSZip;
+}
+
+// Shared engine behind every canvas-based image tool (resize, crop, rotate,
+// flip, convert, compress...). Accepts one or many images at once: the
+// same settings (from cfg.setup, read off the first image) apply to every
+// file, each is processed independently, and results are shown as a list
+// with a genuine original-size -> output-size comparison and a per-file
+// download button, plus "Download All as ZIP" for the batch — matching
+// what people expect from a real compression/conversion tool, not just a
+// single before/after preview.
 function renderImageTool(ws, tool, cfg){
-  // cfg: { dropLabel, setup(host, state, rerun) -> getOpts fn, process(state, opts, canvas) -> {stats, mime, quality} }
+  // cfg: { dropLabel, setup(host, state, rerun) -> getOpts fn, process(state, opts, canvas) -> {mime, quality} }
   const toolbar = h('div',{class:'ws-toolbar'}, h('strong',null,'Image workspace'), h('span',{style:'font-size:12px;color:var(--muted);'},'Processed locally in your browser'));
   const body = h('div',{class:'ws-body'});
   ws.append(toolbar, body);
+
   const uploadWrap = h('div');
   body.appendChild(uploadWrap);
-  imageDropzone(uploadWrap, onFile, cfg.dropLabel);
+  const dz = imageMultiDropzone(uploadWrap, onFiles, cfg.dropLabel);
 
-  let state = null, getOpts = ()=>({});
   const controlsHost = h('div',{style:'margin-top:16px;display:none;'});
-  const previewHost = h('div');
-  let canvasBox = null;
-  const statsWrap = h('div',{class:'stat-list', style:'margin-top:14px;display:none;'});
-  const actions = h('div',{class:'ws-actions', style:'display:none;'});
-  const dlBtn = h('button',{class:'btn btn-primary btn-sm'},'Download result');
-  const resetBtn = h('button',{class:'btn btn-ghost btn-sm'},'Choose another image');
-  actions.append(dlBtn, resetBtn);
-  body.append(controlsHost, previewHost, statsWrap, actions);
+  const summaryWrap = h('div',{class:'batch-summary', style:'display:none;'});
+  const batchToolbar = h('div',{class:'batch-toolbar', style:'display:none;'});
+  const zipBtn = h('button',{class:'btn btn-secondary btn-sm'},'Download All as ZIP');
+  const addMoreBtn = h('button',{class:'btn btn-ghost btn-sm'},'Add more images');
+  const clearBtn = h('button',{class:'btn btn-ghost btn-sm'},'Clear all');
+  const batchActions = h('div',{style:'display:flex;gap:8px;flex-wrap:wrap;align-items:center;'}, zipBtn, addMoreBtn, clearBtn);
+  batchToolbar.append(h('h3',null,'Results'), batchActions);
+  const listWrap = h('div',{class:'batch-list'});
+  body.append(controlsHost, summaryWrap, batchToolbar, listWrap);
 
-  function onFile(file){
-    loadImageFile(file).then(res=>{
-      state = res;
-      controlsHost.innerHTML=''; controlsHost.style.display='block';
-      previewHost.innerHTML='';
-      canvasBox = previewCanvas(previewHost);
-      getOpts = cfg.setup(controlsHost, state, rerun) || (()=>({}));
-      actions.style.display='flex';
-      rerun();
-    }).catch(e=>toast(e.message));
+  let items = [];
+  let getOpts = ()=>({});
+
+  function onFiles(files){
+    const isFirst = items.length===0;
+    const newItems = files.map(file=>({ file }));
+    items = items.concat(newItems);
+    Promise.all(newItems.map(it=>loadImageFile(it.file).then(res=>{ it.state=res; }).catch(e=>{ it.error=e.message; })))
+      .then(()=>{
+        if(isFirst){
+          const first = items.find(it=>it.state);
+          if(!first){ toast('Could not read any of those files as images'); return; }
+          controlsHost.innerHTML=''; controlsHost.style.display='block';
+          getOpts = cfg.setup(controlsHost, first.state, rerun) || (()=>({}));
+        }
+        summaryWrap.style.display='grid';
+        batchToolbar.style.display='flex';
+        rebuildRows();
+        rerun();
+      });
   }
-  let lastBlob=null, lastMime='image/png', lastExt='png';
+
+  function rebuildRows(){
+    listWrap.innerHTML='';
+    items.forEach(it=>{
+      const row = h('div',{class:'batch-row'+(it.state?' processing':'')});
+      const canvas = h('canvas',{class:'thumb'});
+      const info = h('div',{class:'info'});
+      const sizes = h('div',{class:'sizes'}, it.error || 'Processing…');
+      info.append(h('div',{class:'name'}, it.file.name), sizes);
+      const reduction = h('span',{class:'reduction'},'—');
+      const dlBtn = h('button',{class:'btn btn-secondary btn-sm'},'Download');
+      dlBtn.disabled = true;
+      dlBtn.onclick = ()=>{ if(it.blob) download(it.outName, it.blob, it.mime); };
+      row.append(canvas, info, reduction, h('div',{class:'row-actions'}, dlBtn));
+      listWrap.appendChild(row);
+      Object.assign(it, { row, canvas, sizesEl:sizes, reductionEl:reduction, dlBtn });
+    });
+  }
+
   function rerun(){
-    if(!state || !canvasBox) return;
     const opts = getOpts();
-    const out = cfg.process(state, opts, canvasBox) || {};
-    statsWrap.innerHTML=''; statsWrap.style.display='none';
-    if(out.stats && out.stats.length){ statsWrap.style.display='grid'; out.stats.forEach(([l,v])=>statsWrap.appendChild(h('div',{class:'item'},h('b',null,v),h('span',null,l)))); }
-    const mime = out.mime || 'image/png';
-    const quality = out.quality!=null ? out.quality : 0.92;
-    canvasBox.toBlob(blob=>{
-      if(!blob) return;
-      lastBlob = blob; lastMime = mime; lastExt = suggestExt(mime);
-      if(out.onBlob) out.onBlob(blob);
-    }, mime, quality);
+    const pending = items.filter(it=>it.state);
+    let done = 0;
+    if(!pending.length) return;
+    pending.forEach(it=>{
+      const out = cfg.process(it.state, opts, it.canvas) || {};
+      const mime = out.mime || 'image/png';
+      const quality = out.quality!=null ? out.quality : 0.92;
+      it.canvas.toBlob(blob=>{
+        if(!blob) return;
+        it.blob = blob; it.mime = mime;
+        it.outName = baseName(it.file.name)+'-'+tool.slug+'.'+suggestExt(mime);
+        const reduced = it.state.size - blob.size;
+        const pct = it.state.size>0 ? Math.round((reduced/it.state.size)*100) : 0;
+        it.row.classList.remove('processing');
+        it.sizesEl.innerHTML = '<b>'+fmtBytes(it.state.size)+'</b> → <b>'+fmtBytes(blob.size)+'</b>';
+        it.reductionEl.textContent = pct>=0 ? ('Saved '+pct+'%') : ('+'+Math.abs(pct)+'%');
+        it.reductionEl.classList.toggle('bad', pct<0);
+        it.dlBtn.disabled = false;
+        done++;
+        if(done===pending.length) updateSummary();
+      }, mime, quality);
+    });
   }
-  dlBtn.onclick = ()=>{
-    if(!lastBlob){ toast('Nothing to download yet'); return; }
-    download(tool.slug+'-result.'+lastExt, lastBlob, lastMime);
+
+  function updateSummary(){
+    const withBlob = items.filter(it=>it.blob);
+    const totalOriginal = withBlob.reduce((s,it)=>s+it.state.size,0);
+    const totalOutput = withBlob.reduce((s,it)=>s+it.blob.size,0);
+    const avgPct = totalOriginal>0 ? Math.round((1-totalOutput/totalOriginal)*100) : 0;
+    summaryWrap.innerHTML='';
+    [['Files processed', String(withBlob.length)],['Total saved', fmtBytes(Math.max(0,totalOriginal-totalOutput))],['Avg reduction', avgPct+'%']]
+      .forEach(([l,v])=>summaryWrap.appendChild(h('div',{class:'item'},h('b',null,v),h('span',null,l))));
+  }
+
+  zipBtn.onclick = async ()=>{
+    const withBlob = items.filter(it=>it.blob);
+    if(!withBlob.length){ toast('Nothing to download yet'); return; }
+    const original = zipBtn.textContent;
+    zipBtn.disabled = true; zipBtn.textContent = 'Zipping…';
+    try{
+      const JSZip = await loadJsZip();
+      const zip = new JSZip();
+      withBlob.forEach(it=>zip.file(it.outName, it.blob));
+      const blob = await zip.generateAsync({type:'blob'});
+      download(tool.slug+'-results.zip', blob, 'application/zip');
+    }catch(e){
+      toast('Could not create the ZIP file — try downloading files individually.');
+    }
+    zipBtn.disabled = false; zipBtn.textContent = original;
   };
-  resetBtn.onclick = ()=>{
-    state=null; controlsHost.style.display='none'; controlsHost.innerHTML='';
-    previewHost.innerHTML=''; canvasBox=null;
-    statsWrap.style.display='none'; actions.style.display='none';
+  addMoreBtn.onclick = ()=>{ const input = dz.dz.querySelector('input'); if(input) input.click(); };
+  clearBtn.onclick = ()=>{
+    items = [];
+    listWrap.innerHTML = '';
+    summaryWrap.style.display = 'none'; summaryWrap.innerHTML = '';
+    batchToolbar.style.display = 'none';
+    controlsHost.style.display = 'none'; controlsHost.innerHTML = '';
+    dz.setLabel(cfg.dropLabel || 'PNG, JPG or WEBP · multiple files supported · processed locally in your browser');
   };
 }
 

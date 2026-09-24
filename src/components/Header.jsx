@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import SearchBox from './SearchBox.jsx';
 import BrandMark from './BrandMark.jsx';
+import ToolsMegaMenu from './ToolsMegaMenu.jsx';
+import BlogMegaMenu from './BlogMegaMenu.jsx';
 import { useTheme } from '../hooks/useTheme.js';
 import { TOOLS } from '../core/engine-core.js';
 
-const NAV_LINKS = [
+const MOBILE_NAV_LINKS = [
   ['/', 'Home'],
   ['/tools', 'All Tools'],
   ['/categories', 'Categories'],
@@ -13,9 +15,62 @@ const NAV_LINKS = [
   ['/tools?f=popular', 'Popular'],
 ];
 
+const CARET =
+  '<svg class="caret" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>';
+
+function NavMegaItem({ label, id, openMenu, setOpenMenu, children }) {
+  const isOpen = openMenu === id;
+  const closeTimer = useRef(null);
+
+  const open = () => {
+    clearTimeout(closeTimer.current);
+    setOpenMenu(id);
+  };
+  const scheduleClose = () => {
+    closeTimer.current = setTimeout(() => setOpenMenu((cur) => (cur === id ? null : cur)), 120);
+  };
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  return (
+    <div className={`nav-item${isOpen ? ' open' : ''}`} onMouseEnter={open} onMouseLeave={scheduleClose}>
+      <button
+        type="button"
+        className="nav-trigger"
+        aria-expanded={isOpen}
+        onClick={() => setOpenMenu((cur) => (cur === id ? null : id))}
+      >
+        {label}
+        <span dangerouslySetInnerHTML={{ __html: CARET }} />
+      </button>
+      {isOpen && children}
+    </div>
+  );
+}
+
 export default function Header() {
   const { theme, toggleTheme } = useTheme();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [openMenu, setOpenMenu] = useState(null);
+  const navRef = useRef(null);
+
+  useEffect(() => {
+    if (!openMenu) return undefined;
+    const onClickOutside = (e) => {
+      if (navRef.current && !navRef.current.contains(e.target)) setOpenMenu(null);
+    };
+    const onKeyDown = (e) => {
+      if (e.key === 'Escape') setOpenMenu(null);
+    };
+    document.addEventListener('mousedown', onClickOutside);
+    document.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.removeEventListener('mousedown', onClickOutside);
+      document.removeEventListener('keydown', onKeyDown);
+    };
+  }, [openMenu]);
+
+  const closeMenu = () => setOpenMenu(null);
 
   return (
     <header className="site-header">
@@ -24,12 +79,16 @@ export default function Header() {
           <BrandMark size={26} />
           Oxvid Tools
         </Link>
-        <nav className="main-nav" aria-label="Primary">
-          {NAV_LINKS.map(([href, label]) => (
-            <Link key={href} to={href}>
-              {label}
-            </Link>
-          ))}
+        <nav className="main-nav" aria-label="Primary" ref={navRef}>
+          <Link to="/">Home</Link>
+          <NavMegaItem label="Tools" id="tools" openMenu={openMenu} setOpenMenu={setOpenMenu}>
+            <ToolsMegaMenu onNavigate={closeMenu} />
+          </NavMegaItem>
+          <Link to="/categories">Categories</Link>
+          <NavMegaItem label="Blog" id="blog" openMenu={openMenu} setOpenMenu={setOpenMenu}>
+            <BlogMegaMenu onNavigate={closeMenu} />
+          </NavMegaItem>
+          <Link to="/tools?f=popular">Popular</Link>
         </nav>
         <SearchBox
           className="header-search"
@@ -60,7 +119,7 @@ export default function Header() {
       </div>
       {mobileOpen && (
         <nav className="mobile-nav container" aria-label="Mobile" style={{ display: 'block' }}>
-          {NAV_LINKS.map(([href, label]) => (
+          {MOBILE_NAV_LINKS.map(([href, label]) => (
             <Link key={href} to={href} onClick={() => setMobileOpen(false)}>
               {label}
             </Link>

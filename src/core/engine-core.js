@@ -608,6 +608,34 @@ function imageDropzone(container, onFile, label){
   return { dz, setLabel:t=>fname.textContent=t };
 }
 
+// Batch variant of imageDropzone: accepts multiple files (click-select or
+// drag-drop) and hands the whole list to onFiles at once, so tools that
+// apply the same operation to many images (resize, compress, convert...)
+// can process a batch in one pass instead of one file at a time.
+function imageMultiDropzone(container, onFiles, label){
+  const dz = h('div',{class:'dropzone', tabindex:'0', role:'button','aria-label':'Upload images'});
+  dz.innerHTML = svgIcon('upload');
+  dz.appendChild(h('div',null, label||'Click to upload or drag & drop images'));
+  const fname = h('div',{class:'fname'},'PNG, JPG or WEBP · multiple files supported · processed locally in your browser');
+  dz.appendChild(fname);
+  const input = h('input',{type:'file', accept:'image/*', multiple:true, style:'display:none;'});
+  dz.appendChild(input);
+  container.appendChild(dz);
+  function handle(fileList){
+    const files = Array.from(fileList||[]).filter(f=>f && f.type.startsWith('image/'));
+    if(!files.length){ toast('Please choose one or more image files'); return; }
+    fname.textContent = files.length===1 ? (files[0].name+' · '+fmtBytes(files[0].size)) : (files.length+' images selected');
+    onFiles(files);
+  }
+  dz.addEventListener('click', ()=>input.click());
+  dz.addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); input.click(); } });
+  dz.addEventListener('dragover', e=>{ e.preventDefault(); dz.classList.add('drag'); });
+  dz.addEventListener('dragleave', ()=>dz.classList.remove('drag'));
+  dz.addEventListener('drop', e=>{ e.preventDefault(); dz.classList.remove('drag'); handle(e.dataTransfer.files); });
+  input.addEventListener('change', ()=>handle(input.files));
+  return { dz, setLabel:t=>fname.textContent=t };
+}
+
 function loadImageFile(file){
   return new Promise((resolve, reject)=>{
     const url = URL.createObjectURL(file);
@@ -721,6 +749,7 @@ export {
   renderCalc,
   renderTextTool,
   imageDropzone,
+  imageMultiDropzone,
   loadImageFile,
   numField,
   selectField,
